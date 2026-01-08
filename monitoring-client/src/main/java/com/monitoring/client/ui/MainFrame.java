@@ -30,12 +30,11 @@ public class MainFrame extends JFrame {
     private MetricsGraphPanel graphPanel;
 
     public MainFrame() {
-        setTitle("📡 Système de Surveillance Distribué");
+        setTitle(" Système de Surveillance Distribué");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // =============== Tableau des agents ===============
         String[] agentColumns = {"Agent ID", "IP", "CPU %", "RAM %", "Statut", "Dernière mise à jour"};
         tableModel = new DefaultTableModel(agentColumns, 0);
         agentsTable = new JTable(tableModel);
@@ -58,17 +57,17 @@ public class MainFrame extends JFrame {
         });
         JScrollPane agentsScrollPane = new JScrollPane(agentsTable);
 
-        // =============== Tableau des alertes ===============
+        
         String[] alertColumns = {"Agent ID", "Message", "Timestamp"};
         alertsModel = new DefaultTableModel(alertColumns, 0);
         alertsTable = new JTable(alertsModel);
         alertsTable.setAutoCreateRowSorter(true);
         JScrollPane alertsScrollPane = new JScrollPane(alertsTable);
 
-        // =============== Panneau Graphiques ===============
+        
         JPanel graphsPanel = new JPanel(new BorderLayout());
 
-        // --- Sélecteur d'agent ---
+       
         JPanel selectorPanel = new JPanel(new FlowLayout());
         selectorPanel.setBorder(BorderFactory.createTitledBorder("📌 Surveillance ciblée"));
         selectorPanel.add(new JLabel("Agent :"));
@@ -82,28 +81,28 @@ public class MainFrame extends JFrame {
         selectorPanel.add(agentSelector);
         graphsPanel.add(selectorPanel, BorderLayout.NORTH);
 
-        // --- Graphique dynamique ---
+        
         graphPanel = new MetricsGraphPanel();
         graphsPanel.add(graphPanel, BorderLayout.CENTER);
 
-        // =============== Onglets ===============
+        
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("🖥️ Agents", agentsScrollPane);
-        tabbedPane.addTab("🔔 Alertes", alertsScrollPane);
-        tabbedPane.addTab("📈 Graphiques", graphsPanel);
+        tabbedPane.addTab(" Agents", agentsScrollPane);
+        tabbedPane.addTab(" Alertes", alertsScrollPane);
+        tabbedPane.addTab(" Graphiques", graphsPanel);
         add(tabbedPane);
 
-        // =============== Initialisation ===============
+        
         refreshData();
 
-        // Sélectionner le premier agent par défaut
+        
         if (agentSelector.getItemCount() > 0) {
             selectedAgentId = (String) agentSelector.getItemAt(0);
             agentSelector.setSelectedItem(selectedAgentId);
             updateGraphs();
         }
 
-        // Rafraîchissement automatique
+        
         Timer timer = new Timer(2000, e -> {
             refreshData();
             if (selectedAgentId != null) {
@@ -114,7 +113,7 @@ public class MainFrame extends JFrame {
     }
 
     private void setSelectedAgentId(String agentId) {
-        // Ensure UI updates happen on EDT
+        
         SwingUtilities.invokeLater(() -> {
             selectedAgentId = agentId;
             agentSelector.setSelectedItem(agentId);
@@ -127,7 +126,7 @@ public class MainFrame extends JFrame {
             Registry registry = LocateRegistry.getRegistry("localhost", 7000);
             MonitoringService service = (MonitoringService) registry.lookup("MonitoringService");
 
-            // --- Agents ---
+            
             List<Agent> agents = service.getAllAgents();
             tableModel.setRowCount(0);
             for (Agent agent : agents) {
@@ -147,7 +146,7 @@ public class MainFrame extends JFrame {
                 });
             }
 
-            // --- Alertes ---
+            
             List<Alert> alerts = service.getAllAlerts();
             alertsModel.setRowCount(0);
             for (Alert alert : alerts) {
@@ -161,15 +160,15 @@ public class MainFrame extends JFrame {
                 });
             }
 
-            // --- Mettre à jour la ComboBox (en préservant la sélection) ---
-            String currentlySelected = selectedAgentId; // Remember current selection
+            
+            String currentlySelected = selectedAgentId; 
             
             agentSelector.removeAllItems();
             for (Agent agent : agents) {
                 agentSelector.addItem(agent.getAgentId());
             }
             
-            // Restore selection if the agent still exists
+            
             if (currentlySelected != null && agentSelector.getItemCount() > 0) {
                 boolean found = false;
                 for (int i = 0; i < agentSelector.getItemCount(); i++) {
@@ -179,7 +178,7 @@ public class MainFrame extends JFrame {
                         break;
                     }
                 }
-                // If not found, select first agent
+                
                 if (!found) {
                     selectedAgentId = (String) agentSelector.getItemAt(0);
                     agentSelector.setSelectedIndex(0);
@@ -187,14 +186,14 @@ public class MainFrame extends JFrame {
                     selectedAgentId = currentlySelected;
                 }
             } else if (agentSelector.getItemCount() > 0) {
-                // Select first agent if nothing was selected
+               
                 selectedAgentId = (String) agentSelector.getItemAt(0);
                 agentSelector.setSelectedIndex(0);
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
-                "❌ Erreur de connexion au serveur :\n" + e.getMessage(), 
+                " Erreur de connexion au serveur :\n" + e.getMessage(), 
                 "Connexion RMI", 
                 JOptionPane.ERROR_MESSAGE);
         }
@@ -212,7 +211,7 @@ public class MainFrame extends JFrame {
 
             List<SystemMetrics> history = service.getMetricsHistory(selectedAgentId);
             
-            // Update graph panel
+            
             if (graphPanel != null) {
                 graphPanel.updateData(history);
             }
@@ -222,7 +221,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Rendu personnalisé pour les agents
+    
     private class StatusCellRenderer extends JLabel implements javax.swing.table.TableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
