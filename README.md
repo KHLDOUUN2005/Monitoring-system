@@ -52,7 +52,11 @@ Le système est composé de trois composants principaux :
 
 ##  Structure du Dépôt
 monitoring-system/
+
 ├── monitoring-agent/ # Agent de collecte des métriques
+
 ├── monitoring-server/ # Serveur central (RMI + stockage)
+
 ├── monitoring-client/ # Interface graphique (Swing)
+
 └── README.md # Ce fichier
