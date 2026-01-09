@@ -56,7 +56,7 @@ public class DataManager{
 			return;
 		}
 		long interval = alert.getTimestamp()-last;
-		if (interval==(collectionIntervalSeconds)*(1000)) {
+		if (interval==(collectionIntervalSeconds)*(3000/2)) {
 			lasts.put(agentId,alert.getTimestamp());
 		}
 		else {
